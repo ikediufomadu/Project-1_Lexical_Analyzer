@@ -7,14 +7,14 @@ import java.io.*;
 
 public class lexicalAnalyzer {
     //Variables
-    static String currentKind = "";
-    static int currentLine = 0;
-    static int currentCharInLine = 0;
-    static String currentTokenValue = "";
-    static String currentTokenRead = "";
-    static boolean lexErrorReported = false;
-    static String line = "";
-    static BufferedReader bufferedReaderStatic;
+    private static String currentKind = "";
+    private static int currentLine = 0;
+    private static int currentCharInLine = 0;
+    private static String currentTokenValue = "";
+    private static String currentTokenRead = "";
+    private static boolean lexErrorReported = false;
+    private static String line = "";
+    private static BufferedReader bufferedReaderStatic;
 
     public static void main(String[] args) throws IOException {
         BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -27,19 +27,29 @@ public class lexicalAnalyzer {
         reader(fileName);
     }
 
-    //Opens a text file if it exits and reads it
+    //Opens a text file if it exits and reads it line by line
     public static void reader(String filenameToRead) throws IOException {
         File f = new File(filenameToRead);
         if(f.exists() && !f.isDirectory()) {
-            FileReader fr=new FileReader(f);   //Creation of File Reader object
-            BufferedReader br=new BufferedReader(fr);  //Creation of BufferedReader object
+            FileReader fr = new FileReader(f);
+            BufferedReader br = new BufferedReader(fr);
             int c = 0;
+
+            //Reads by line
+            while ((line = br.readLine()) != null) {
+                currentLine++;
+                if (isKeyword(line)){
+                    kind();
+                }
+            }
+
+            //Reads by character
             while((c = br.read()) != -1) {
-                char character = (char) c;          //converting integer to char
-                System.out.println(character);        //Display the Character
+                currentCharInLine++;
             }
             br.close();
-            next();
+            fr.close();
+//            next();
         }
         else {
             System.out.println("The file name you entered does not exist within this program's directory. Please recheck.\n");
@@ -50,6 +60,9 @@ public class lexicalAnalyzer {
     //Get next lexeme
     public static void next() throws IOException {
         try{
+            next();
+            System.out.println(position() + " " + kind() + " " + value());
+
             while(kind() != "end-to-text") {
                 next();
                 System.out.println(position() + " " + kind() + " " + value());
@@ -61,7 +74,27 @@ public class lexicalAnalyzer {
     }
 
     //Get kind of lexeme
-    public static String kind() {return currentKind;}
+    public static String kind() {
+
+        switch (currentKind) {
+            case "identifier":
+                currentKind = "ID";
+                break;
+            case "integer":
+                currentKind = "NUM";
+                break;
+            case "keyword":
+                currentKind = "program";
+                break;
+            case "symbol":
+                currentKind = ":=";
+                break;
+            case "end":
+                currentKind = "end-of-text";
+                break;
+        }
+        return currentKind;
+    }
 
     //Get value of lexeme
     public static String value() {return currentTokenValue;}
@@ -74,10 +107,18 @@ public class lexicalAnalyzer {
 //
 //    //Checks if word is letter/number/underscore
 //    public static boolean wordIsLetterNumberUnderscore(String word) {}
-//
-//    //Check reserved keywords
-//    public static boolean isKeyword(String tokenVar) {}
-//
+
+    //Check reserved keywords
+    public static boolean isKeyword(String tokenVar) {
+        String[] reservedKeyword = {"program", "bool", "int", "if", "else", "then", "fi", "not", "true", "false", "print", "while", "do", "od"};
+        for (String s : reservedKeyword) {
+            if (s.equals(tokenVar)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 //    //Checks first char if it is munchable
 //    public static boolean isAnOperatorFirstChar(char tokenVar) {}
 //
@@ -98,7 +139,6 @@ public class lexicalAnalyzer {
 //
 //    //Report errors
 //    public static void reportLexicalError(String type, String spec) {
-//        position();
 //        System.out.println(position() + "Illegal character " + "'" + c + "'\nExiting program");
 //        System.exit(0);
 //    }
