@@ -33,6 +33,7 @@ public class lexicalAnalyzer {
             int c = 0;
             while((c = br.read()) != -1)         //Read char by Char
             {
+                //if(currentCharInLine == '/' && next() == "/")
                 char character = (char) c;          //converting integer to char
                 isAnOperatorFirstChar((char) c);
                 reportLexicalError((char) c);
@@ -44,7 +45,14 @@ public class lexicalAnalyzer {
     }
 
     //Get next lexeme
-    public static void next() throws IOException {}
+    public static void next() throws IOException {
+        try{
+            while(kind() != "end-to-text") {
+                next();
+                System.out.println(position() + " " + kind() + " " + value());
+            }
+        }
+    }
 
     //Get kind of lexeme
     public static String kind() {return currentKind;}

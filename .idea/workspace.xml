@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Skeleton Functions">
+    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexicalAnalyzer.java" afterDir="false" />
     </list>
@@ -59,7 +59,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665189596779</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Updated Functions">
+      <created>1665192085680</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1665192085681</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -76,6 +83,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Starting Files" />
     <MESSAGE value="Skeleton Functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Skeleton Functions" />
+    <MESSAGE value="Updated Functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Functions" />
   </component>
 </project>
