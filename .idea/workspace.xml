@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions">
+    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions v.2">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexicalAnalyzer.java" afterDir="false" />
     </list>
@@ -29,6 +29,15 @@
     "settings.editor.selected.configurable": "reference.projectsettings.compiler.rmicompiler"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="LAdriver" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="lexicalAnalyzer" />
+      <module name="Project-1_Lexical_Analyzer" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -66,7 +75,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665192085681</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Updated Functions v.2">
+      <created>1665195050890</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1665195050890</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -84,6 +100,7 @@
     <MESSAGE value="Starting Files" />
     <MESSAGE value="Skeleton Functions" />
     <MESSAGE value="Updated Functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated Functions" />
+    <MESSAGE value="Updated Functions v.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Functions v.2" />
   </component>
 </project>
