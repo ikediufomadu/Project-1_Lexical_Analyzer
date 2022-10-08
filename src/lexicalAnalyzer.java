@@ -35,7 +35,8 @@ public class lexicalAnalyzer {
             {
                 char character = (char) c;          //converting integer to char
                 isAnOperatorFirstChar((char) c);
-                System.out.println(character);        //Display the Character
+                reportLexicalError((char) c);
+                System.out.println(position() + " " + character);        //Display the Character
             }
         }
 
@@ -64,16 +65,7 @@ public class lexicalAnalyzer {
     public static boolean isKeyword(String tokenVar) {}
 
     //Checks first char if it is munchable
-    public static boolean isAnOperatorFirstChar(char tokenVar) {
-        char[] programStart = {'p','r','o','g','r','a','m'};
-
-        for(char c : programStart) {
-            if(tokenVar != c) {
-                return false;
-            }
-        }
-        return true;
-    }
+    public static boolean isAnOperatorFirstChar(char tokenVar) {}
 
     //Munching is done
     public static void munchOperator(){}
@@ -91,10 +83,22 @@ public class lexicalAnalyzer {
     public static void munchNumber() {}
 
     //Report errors
-    public static void reportLexicalError(String type, String spec) {}
+    public static void reportLexicalError(char c) {
+        position();
+        System.out.println(position() + "Illegal character " + "'" + c + "'\nExiting program");
+        System.exit(0);
+    }
 
     //Function that keeps program running
-    public static boolean sequenceKeepRunning() {}
+    public static void sequenceKeepRunning() throws IOException {
+        try{
+            main(new String[0]);
+        }
+        catch (IOException e) {
+            System.out.println("Could not continue program...quitting program");
+            System.exit(0);
+        }
+    }
 
     //Reset variables to analyze next file
     public void reset() {
