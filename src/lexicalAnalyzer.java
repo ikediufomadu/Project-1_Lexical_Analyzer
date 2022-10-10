@@ -4,6 +4,8 @@
 
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class lexicalAnalyzer {
     //Variables
@@ -63,7 +65,9 @@ public class lexicalAnalyzer {
     }
 
     private static void symbolSeparator(String s) {
-        System.out.println("this is " + s;
+        List<String> words = new ArrayList<>();
+        words.add(s);
+        System.out.println(words);
     }
 
     //Get next lexeme
