@@ -4,10 +4,6 @@
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class lexicalAnalyzer {
     //Variables
@@ -38,7 +34,6 @@ public class lexicalAnalyzer {
             FileReader fr = new FileReader(f);
             BufferedReader br = new BufferedReader(fr);
             int c = 0;
-
             //Reads by character
             while((c = br.read()) != -1) {
                 currentCharInLine++;
@@ -55,16 +50,20 @@ public class lexicalAnalyzer {
 
     //Converts characters passed by reader method to individual words
     private static void charToWord(char c) {
-        List<String> words = new ArrayList<>();
         String newWord = "";
 
         if(c != ' ' /*&& c != '/' && c != ';'*/) {
             newWord = newWord + c;
         }
         else {
-            words.add(newWord);
             newWord = "";
         }
+        symbolSeparator(newWord);
+        //System.out.print(newWord);
+    }
+
+    private static void symbolSeparator(String s) {
+        System.out.println("this is " + s);
     }
 
     //Get next lexeme
