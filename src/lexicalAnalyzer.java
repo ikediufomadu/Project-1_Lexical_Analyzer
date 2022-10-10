@@ -63,7 +63,7 @@ public class lexicalAnalyzer {
     }
 
     private static void symbolSeparator(String s) {
-        System.out.println("this is " + s);
+        System.out.println("this is " + s;
     }
 
     //Get next lexeme
