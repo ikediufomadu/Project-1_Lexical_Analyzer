@@ -4,6 +4,10 @@
 
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class lexicalAnalyzer {
     //Variables
@@ -27,7 +31,7 @@ public class lexicalAnalyzer {
         reader(fileName);
     }
 
-    //Opens a text file if it exits and reads it line by line
+    //Opens a text file if it exits and reads it
     public static void reader(String filenameToRead) throws IOException {
         File f = new File(filenameToRead);
         if(f.exists() && !f.isDirectory()) {
@@ -35,25 +39,31 @@ public class lexicalAnalyzer {
             BufferedReader br = new BufferedReader(fr);
             int c = 0;
 
-            //Reads by line
-            while ((line = br.readLine()) != null) {
-                currentLine++;
-                if (isKeyword(line)){
-                    kind();
-                }
-            }
-
             //Reads by character
             while((c = br.read()) != -1) {
                 currentCharInLine++;
+                charToWord((char)c);
             }
             br.close();
             fr.close();
-//            next();
         }
         else {
             System.out.println("The file name you entered does not exist within this program's directory. Please recheck.\n");
             main(new String[0]);
+        }
+    }
+
+    //Converts characters passed by reader method to individual words
+    private static void charToWord(char c) {
+        List<String> words = new ArrayList<>();
+        String newWord = "";
+
+        if(c != ' ' /*&& c != '/' && c != ';'*/) {
+            newWord = newWord + c;
+        }
+        else {
+            words.add(newWord);
+            newWord = "";
         }
     }
 
