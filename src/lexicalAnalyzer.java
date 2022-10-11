@@ -73,7 +73,9 @@ public class lexicalAnalyzer {
         words.add(s);
         System.out.println(words);
         //Figure out how to separate the symbols from the words
+        Send the words until you hit a symbol (use the method that determines if the char is a number or letter to pass it and then use an else statement to pass the symbol assosicated with it)
         //Send the word to the kind function WITHOUT the symbol
+        After separating the words and symbols, send the words to the kind function. Make it a global variable and then send it to kind becuase it will be updated constantly
     }
 
     //Get next lexeme
@@ -94,7 +96,6 @@ public class lexicalAnalyzer {
 
     //Get kind of lexeme
     public static String kind() {
-        //if(Character.isLetter(string.charAt(currentKind)))
         switch (currentKind) {
             case "identifiers":
                 currentKind = "ID";
@@ -116,7 +117,15 @@ public class lexicalAnalyzer {
     }
 
     //Get value of lexeme
-    public static String value() {return currentTokenValue;}
+    public static String value() {
+        if (currentKind.equals("identifiers")) {
+            return  "ID";
+        }
+        else if (currentKind.equals("integer")) {
+            return "NUM";
+        }
+        return currentTokenValue;
+    }
 
     //Get position of lexeme
     public static String position() {return (currentLine) + ":" + (currentCharInLine);}

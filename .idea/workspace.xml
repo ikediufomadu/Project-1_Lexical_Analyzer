@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions v.4&#10;-Main function completed&#10;-Reader function added line and character updater">
+    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions v.3&#10;-Main function completed&#10;-Reader function completed&#10;-charToWord function completed&#10;-symbolSeparator created, needs to register words and symbols">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_10_22__3_40_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_10_22__3_40_PM__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexicalAnalyzer.java" afterDir="false" />
     </list>
