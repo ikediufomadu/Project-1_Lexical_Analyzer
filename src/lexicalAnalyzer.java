@@ -5,6 +5,7 @@
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class lexicalAnalyzer {
@@ -39,6 +40,7 @@ public class lexicalAnalyzer {
             //Reads by character
             while((c = br.read()) != -1) {
                 currentCharInLine++;
+                reportLexicalError((char) c);
                 charToWord((char)c);
             }
             br.close();
@@ -60,14 +62,18 @@ public class lexicalAnalyzer {
         else {
             newWord = "";
         }
-        symbolSeparator(newWord);
         //System.out.print(newWord);
+        symbolSeparator(newWord);
     }
+    private static void commentExcluder(){
 
+    }
     private static void symbolSeparator(String s) {
         List<String> words = new ArrayList<>();
         words.add(s);
         System.out.println(words);
+        //Figure out how to separate the symbols from the words
+        //Send the word to the kind function WITHOUT the symbol
     }
 
     //Get next lexeme
@@ -82,15 +88,15 @@ public class lexicalAnalyzer {
             }
         }
         catch (IOException e) {
-            System.out.println("Could not fulfil the next method.");
+            System.out.println("Could not fulfil the next method.\n" + e);
         }
     }
 
     //Get kind of lexeme
     public static String kind() {
-
+        //if(Character.isLetter(string.charAt(currentKind)))
         switch (currentKind) {
-            case "identifier":
+            case "identifiers":
                 currentKind = "ID";
                 break;
             case "integer":
@@ -113,8 +119,8 @@ public class lexicalAnalyzer {
     public static String value() {return currentTokenValue;}
 
     //Get position of lexeme
-    public static String position() {return (currentLine + 1) + ":" + (currentCharInLine + 1);}
-//
+    public static String position() {return (currentLine) + ":" + (currentCharInLine);}
+
 //    //Verifies if a character is acceptable in an identifier as a non-first character
 //    public static boolean isALetterNumberUnderscore(char a) {}
 //
@@ -132,49 +138,34 @@ public class lexicalAnalyzer {
         return false;
     }
 
-//    //Checks first char if it is munchable
-//    public static boolean isAnOperatorFirstChar(char tokenVar) {}
-//
-//    //Munching is done
-//    public static void munchOperator(){}
-//
-//    //Check if a string exists in an array
-//    public static boolean stringInArrayCheck(String stringChecked, String[] hostArray) {}
-//
-//    //if identifier NOT keyword
-//    public static boolean isIdentifier(String tokenVar) {}
-//
-//    //Munch a word till whitespace or symbol
-//    public static void munchWord() {}
-//
-//    //Munch a number till whitespace or symbol
-//    public static void munchNumber() {}
-//
-//    //Report errors
-//    public static void reportLexicalError(String type, String spec) {
-//        System.out.println(position() + "Illegal character " + "'" + c + "'\nExiting program");
-//        System.exit(0);
-//    }
-//
-//    //Function that keeps program running
-//    public static void sequenceKeepRunning() throws IOException {
-//        try{
-//            main(new String[0]);
-//        }
-//        catch (IOException e) {
-//            System.out.println("Could not continue program...quitting program");
-//            System.exit(0);
-//        }
-//    }
-//
-//    //Reset variables to analyze next file
-//    public void reset() {
-//        this.currentKind = "";
-//        this.currentLine = 0;
-//        this.currentCharInLine = 0;
-//        this.currentTokenValue = "";
-//        this.currentTokenRead = "";
-//        this.lexErrorReported = false;
-//        this.line = "";
-//    }
+    //Report syntax errors
+    public static void reportLexicalError(char c) {
+        if(c == '@' /*|| c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '.' ||  c == ':' || c == '?' || c == '\'' || c == '\"' || c == '[' || c == ']'*/) {
+            System.out.println("Illegal character at " + position() + ". Character is '" + c + "'.\nExiting program...");
+            System.exit(0);
+        }
+    }
+
+    //Function that keeps program running
+    public static void sequenceKeepRunning() throws IOException {
+        try{
+            reset();
+            main(new String[0]);
+        }
+        catch (IOException e) {
+            System.out.println("Could not continue program...quitting program");
+            System.exit(0);
+        }
+    }
+
+    //Reset variables to analyze next file
+    private static void reset() {
+        currentKind = "";
+        currentLine = 0;
+        currentCharInLine = 0;
+        currentTokenValue = "";
+        currentTokenRead = "";
+        lexErrorReported = false;
+        line = "";
+    }
 }
