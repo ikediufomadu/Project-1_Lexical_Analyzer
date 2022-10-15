@@ -5,7 +5,6 @@
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class lexicalAnalyzer {
@@ -93,7 +92,7 @@ public class lexicalAnalyzer {
     private static void symbolSeparator(String s) {
         List<String> words = new ArrayList<>();
         words.add(s);
-        if(isKeyword(words.toString()) == true) {
+        if(isKeyword(words.toString())) {
             System.out.println(words);
             //send the word to the KIND method then print it out
         }
@@ -102,9 +101,9 @@ public class lexicalAnalyzer {
         }
         //System.out.println(words);
         //Figure out how to separate the symbols from the words
-        //Send the words until you hit a symbol (use the method that determines if the char is a number or letter to pass it and then use an else statement to pass the symbol assosicated with it)
+        //Send the words until you hit a symbol (use the method that determines if the char is a number or letter to pass it and then use an else statement to pass the symbol associated with it)
         //Send the word to the kind function WITHOUT the symbol
-        //After separating the words and symbols, send the words to the kind function. Make it a global variable and then send it to kind becuase it will be updated constantly
+        //After separating the words and symbols, send the words to the kind function. Make it a global variable and then send it to kind because it will be updated constantly
     }
 
     //Get next lexeme
@@ -113,7 +112,7 @@ public class lexicalAnalyzer {
             next();
             System.out.println(position() + " " + kind() + " " + value());
 
-            while(kind() != "end-of-text") {
+            while(!kind().equals("end-of-text")) {
                 next();
                 System.out.println(position() + " " + kind() + " " + value());
             }
@@ -126,21 +125,11 @@ public class lexicalAnalyzer {
     //Get kind of lexeme
     public static String kind() {
         switch (currentKind) {
-            case "identifiers":
-                currentKind = "ID";
-                break;
-            case "integer":
-                currentKind = "NUM";
-                break;
-            case "keyword":
-                currentKind = "program";
-                break;
-            case "symbol":
-                currentKind = ":=";
-                break;
-            case "end":
-                currentKind = "end-of-text";
-                break;
+            case "identifiers" -> currentKind = "ID";
+            case "integer" -> currentKind = "NUM";
+            case "keyword" -> currentKind = "program";
+            case "symbol" -> currentKind = ":=";
+            case "end" -> currentKind = "end-of-text";
         }
         return currentKind;
     }
