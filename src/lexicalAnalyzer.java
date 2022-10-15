@@ -16,8 +16,7 @@ public class lexicalAnalyzer {
     private static String currentTokenValue = "";
     private static String currentTokenRead = "";
     private static boolean lexErrorReported = false;
-    private static String line = "";
-    private static BufferedReader bufferedReaderStatic;
+    //private static
 
     public static void main(String[] args) throws IOException {
         BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -30,18 +29,32 @@ public class lexicalAnalyzer {
         reader(fileName);
     }
 
-    //Opens a text file if it exits and reads it
+    //Opens a text file if it exists and reads it
     public static void reader(String filenameToRead) throws IOException {
         File f = new File(filenameToRead);
         if(f.exists() && !f.isDirectory()) {
             FileReader fr = new FileReader(f);
             BufferedReader br = new BufferedReader(fr);
-            int c = 0;
-            //Reads by character
-            while((c = br.read()) != -1) {
-                currentCharInLine++;
-                reportLexicalError((char) c);
-                charToWord((char)c);
+            String checker;
+            char[] charHolder;
+
+            //Reads by line
+            while ((checker = br.readLine()) != null) {
+                currentLine++;
+                charHolder = new char[checker.length()];
+                for (int i = 0; i < checker.length(); i++) {
+                    currentCharInLine++;
+                    char c = checker.charAt(i);
+
+                    //Skips code with comments
+                    if (commentChecker(charHolder, checker)) {
+                        continue;
+                    }
+                    reportLexicalError(c);
+                    charHolder[i] = c;
+                }
+                charToWord(charHolder);
+                currentCharInLine = 0;
             }
             br.close();
             fr.close();
@@ -51,31 +64,47 @@ public class lexicalAnalyzer {
             main(new String[0]);
         }
     }
-
-    //Converts characters passed by reader method to individual words
-    private static void charToWord(char c) {
-        String newWord = "";
-
-        if(c != ' ' /*&& c != '/' && c != ';'*/) {
-            newWord = newWord + c;
+    //Check characters to see if a '/' follows another '/'
+    private static boolean commentChecker(char[] charHolder, String checker) {
+        for (int i = 0; i < checker.length(); i++) {
+            for (int j = i + 1; j < checker.length(); j++) {
+                if (charHolder[i] == '/' && charHolder[j] == '/') {
+                    return true;
+                }
+            }
         }
-        else {
-            newWord = "";
-        }
-        //System.out.print(newWord);
-        symbolSeparator(newWord);
+        return false;
     }
-    private static void commentExcluder(){
-
+    //Converts characters passed by reader method to words
+    private static void charToWord(char[] charHolder) {
+        String newWord = "";
+//        System.out.println(Arrays.toString(charHolder));
+        for (char c : charHolder) {
+            if(c != ' ') {
+                newWord = newWord + c;
+            }
+            else {
+                //symbolSeparator(newWord);
+                System.out.print(newWord + " ");
+                newWord = "";
+            }
+        }
     }
     private static void symbolSeparator(String s) {
         List<String> words = new ArrayList<>();
         words.add(s);
-        System.out.println(words);
+        if(isKeyword(words.toString()) == true) {
+            System.out.println(words);
+            //send the word to the KIND method then print it out
+        }
+        else{
+            //System.out.println("NO KEY WORDS");
+        }
+        //System.out.println(words);
         //Figure out how to separate the symbols from the words
-        Send the words until you hit a symbol (use the method that determines if the char is a number or letter to pass it and then use an else statement to pass the symbol assosicated with it)
+        //Send the words until you hit a symbol (use the method that determines if the char is a number or letter to pass it and then use an else statement to pass the symbol assosicated with it)
         //Send the word to the kind function WITHOUT the symbol
-        After separating the words and symbols, send the words to the kind function. Make it a global variable and then send it to kind becuase it will be updated constantly
+        //After separating the words and symbols, send the words to the kind function. Make it a global variable and then send it to kind becuase it will be updated constantly
     }
 
     //Get next lexeme
@@ -84,7 +113,7 @@ public class lexicalAnalyzer {
             next();
             System.out.println(position() + " " + kind() + " " + value());
 
-            while(kind() != "end-to-text") {
+            while(kind() != "end-of-text") {
                 next();
                 System.out.println(position() + " " + kind() + " " + value());
             }
@@ -116,7 +145,7 @@ public class lexicalAnalyzer {
         return currentKind;
     }
 
-    //Get value of lexeme
+    //Get value of lexeme if it is an ID or NUM
     public static String value() {
         if (currentKind.equals("identifiers")) {
             return  "ID";
@@ -138,7 +167,9 @@ public class lexicalAnalyzer {
 
     //Check reserved keywords
     public static boolean isKeyword(String tokenVar) {
-        String[] reservedKeyword = {"program", "bool", "int", "if", "else", "then", "fi", "not", "true", "false", "print", "while", "do", "od"};
+        String[] reservedKeyword = {"program", "bool", "int", "if", "else", "then", "fi", "not", "true", "false", "print", "while", "do", "od",
+        "<", "=<", "=", "!=", ">=", ">", "+", "-", "or", "*", "/", "and"};
+        System.out.println(tokenVar);
         for (String s : reservedKeyword) {
             if (s.equals(tokenVar)) {
                 return true;
@@ -148,11 +179,13 @@ public class lexicalAnalyzer {
     }
 
     //Report syntax errors
-    public static void reportLexicalError(char c) {
-        if(c == '@' /*|| c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '.' ||  c == ':' || c == '?' || c == '\'' || c == '\"' || c == '[' || c == ']'*/) {
-            System.out.println("Illegal character at " + position() + ". Character is '" + c + "'.\nExiting program...");
+    public static boolean reportLexicalError(char c) {
+        if(c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '\"' || c == '?' || c == '\'' || c == '[' || c == ']') {
+            System.out.println("\nIllegal character at " + position() + ". Character is '" + c + "'.\nExiting program...");
             System.exit(0);
+            return lexErrorReported = true;
         }
+        return lexErrorReported;
     }
 
     //Function that keeps program running
@@ -170,11 +203,10 @@ public class lexicalAnalyzer {
     //Reset variables to analyze next file
     private static void reset() {
         currentKind = "";
-        currentLine = 0;
+        currentLine = 1;
         currentCharInLine = 0;
         currentTokenValue = "";
         currentTokenRead = "";
         lexErrorReported = false;
-        line = "";
     }
 }

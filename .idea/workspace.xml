@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions v.5">
+    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions v.4&#10;-Main function completed&#10;-Reader function added line and character updater">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexicalAnalyzer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,14 +107,7 @@
       <option name="project" value="LOCAL" />
       <updated>1665424891227</updated>
     </task>
-    <task id="LOCAL-00010" summary="Updated Functions v.5">
-      <created>1665500585327</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1665500585327</updated>
-    </task>
-    <option name="localTasksCounter" value="11" />
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -136,7 +130,6 @@
     <MESSAGE value="Updated Functions v.3&#10;-Main function completed&#10;-Reader function completed&#10;-charToWord function words list needs to be printable" />
     <MESSAGE value="Updated Functions v.3&#10;-Main function completed&#10;-Reader function completed&#10;-charToWord function completed&#10;-Need to be able to remove symbols from words made by charToWord function" />
     <MESSAGE value="Updated Functions v.3&#10;-Main function completed&#10;-Reader function completed&#10;-charToWord function completed&#10;-symbolSeparator created, needs to register words and symbols" />
-    <MESSAGE value="Updated Functions v.5" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated Functions v.5" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Functions v.3&#10;-Main function completed&#10;-Reader function completed&#10;-charToWord function completed&#10;-symbolSeparator created, needs to register words and symbols" />
   </component>
 </project>
