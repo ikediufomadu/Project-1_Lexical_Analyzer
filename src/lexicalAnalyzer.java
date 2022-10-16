@@ -5,6 +5,7 @@
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class lexicalAnalyzer {
@@ -77,14 +78,23 @@ public class lexicalAnalyzer {
     //Converts characters passed by reader method to words
     private static void charToWord(char[] charHolder) {
         String newWord = "";
-//        System.out.println(Arrays.toString(charHolder));
-        for (char c : charHolder) {
-            if(c != ' ') {
-                newWord = newWord + c;
+        //System.out.println(Arrays.toString(charHolder));
+        for (int i = 0; i < charHolder.length; i++) {
+            for (int j = i + 1; j < charHolder.length; j++){
+                if (charHolder[i] == '/' && charHolder[j] == '/') {
+                    return;
+                }
+            }
+            if (charHolder[i] != ' ') {
+                newWord = newWord + charHolder[i];
+                 if (i == charHolder.length - 1) {
+                     //symbolSeparator(newWord);
+                     System.out.print(newWord);
+                 }
             }
             else {
                 //symbolSeparator(newWord);
-                System.out.print(newWord + " ");
+                System.out.print(newWord);
                 newWord = "";
             }
         }
@@ -92,8 +102,9 @@ public class lexicalAnalyzer {
     private static void symbolSeparator(String s) {
         List<String> words = new ArrayList<>();
         words.add(s);
+        System.out.println(Arrays.toString(words.toArray()));
         if(isKeyword(words.toString())) {
-            System.out.println(words);
+            //System.out.println(words);
             //send the word to the KIND method then print it out
         }
         else{
@@ -147,13 +158,6 @@ public class lexicalAnalyzer {
 
     //Get position of lexeme
     public static String position() {return (currentLine) + ":" + (currentCharInLine);}
-
-//    //Verifies if a character is acceptable in an identifier as a non-first character
-//    public static boolean isALetterNumberUnderscore(char a) {}
-//
-//    //Checks if word is letter/number/underscore
-//    public static boolean wordIsLetterNumberUnderscore(String word) {}
-
     //Check reserved keywords
     public static boolean isKeyword(String tokenVar) {
         String[] reservedKeyword = {"program", "bool", "int", "if", "else", "then", "fi", "not", "true", "false", "print", "while", "do", "od",
