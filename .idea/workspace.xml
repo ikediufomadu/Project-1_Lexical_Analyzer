@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions v.7&#10;-Reader function complete&#10;-Skips commented code&#10;-charToWord fully working&#10;-report method working&#10;-chartoword sends fully built arraylist&#10;-NEED TO CHECK WORD TO SEE IF IT IS KIND OR NOT">
+    <list default="true" id="35046c65-8b45-434c-8341-1b2cf988b548" name="Changes" comment="Updated Functions v.8.1&#10;-Need to manipulate position method&#10;-Stop outputting empty lines&#10;-fully define keyword function to allow kind function to work as intended&#10;-get Kind function working">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lexicalAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexicalAnalyzer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -17,7 +18,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2FgUlAuWXvzOgVl0VHpojwOc9W0" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -28,6 +29,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
   <component name="RunManager">
     <configuration name="LAdriver" type="Application" factoryName="Application">
@@ -145,7 +147,21 @@
       <option name="project" value="LOCAL" />
       <updated>1665974562402</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Updated Functions v.8&#10;-Need to manipulate position method&#10;-Stop outputting empty lines&#10;-get Kind function working">
+      <created>1665979000321</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1665979000321</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Updated Functions v.8.1&#10;-Need to manipulate position method&#10;-Stop outputting empty lines&#10;-fully define keyword function to allow kind function to work as intended&#10;-get Kind function working">
+      <created>1665979199825</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1665979199825</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -171,6 +187,8 @@
     <MESSAGE value="Updated Functions v.7&#10;-Reader function complete&#10;-Skips commented code&#10;-charToWord semi-working&#10;-report method working" />
     <MESSAGE value="Updated Functions v.7&#10;-Reader function complete&#10;-Skips commented code&#10;-charToWord fully working&#10;-report method working&#10;-trying to send chartoword results to symbolseparator only once" />
     <MESSAGE value="Updated Functions v.7&#10;-Reader function complete&#10;-Skips commented code&#10;-charToWord fully working&#10;-report method working&#10;-chartoword sends fully built arraylist&#10;-NEED TO CHECK WORD TO SEE IF IT IS KIND OR NOT" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated Functions v.7&#10;-Reader function complete&#10;-Skips commented code&#10;-charToWord fully working&#10;-report method working&#10;-chartoword sends fully built arraylist&#10;-NEED TO CHECK WORD TO SEE IF IT IS KIND OR NOT" />
+    <MESSAGE value="Updated Functions v.8&#10;-Need to manipulate position method&#10;-Stop outputting empty lines&#10;-get Kind function working" />
+    <MESSAGE value="Updated Functions v.8.1&#10;-Need to manipulate position method&#10;-Stop outputting empty lines&#10;-fully define keyword function to allow kind function to work as intended&#10;-get Kind function working" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Functions v.8.1&#10;-Need to manipulate position method&#10;-Stop outputting empty lines&#10;-fully define keyword function to allow kind function to work as intended&#10;-get Kind function working" />
   </component>
 </project>
