@@ -136,7 +136,7 @@ public class lexicalAnalyzer {
     public static String value() {
         for (String s: words) {
             if (isKeyword(s)) {
-                //System.out.print("\n noice");
+                kind();
             }
         }
         if (currentKind.equals("identifiers")) {
