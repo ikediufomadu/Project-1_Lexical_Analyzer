@@ -27,7 +27,8 @@ public class lexicalAnalyzer {
             System.exit(0);
         }
         reader(fileName);
-        kindHelper();
+        value();
+        //kindHelper();
     }
     //Opens a text file if it exists and reads it
     public static void reader(String filenameToRead) throws IOException {
@@ -133,6 +134,11 @@ public class lexicalAnalyzer {
 
     //Get value of lexeme if it is an ID or NUM
     public static String value() {
+        for (String s: words) {
+            if (isKeyword(s)) {
+                //System.out.print("\n noice");
+            }
+        }
         if (currentKind.equals("identifiers")) {
             return  "ID";
         }
@@ -148,7 +154,8 @@ public class lexicalAnalyzer {
     public static boolean isKeyword(String tokenVar) {
         String[] reservedKeyword = {"program", "bool", "int", "if", "else", "then", "fi", "not", "true", "false", "print", "while", "do", "od",
         "<", "=<", "=", "!=", ">=", ">", "+", "-", "or", "*", "/", "and"};
-        System.out.println(tokenVar);
+        //need multiple arrays for the different kinds of words.
+        System.out.println(position() + ": " + tokenVar);
         for (String s : reservedKeyword) {
             if (s.equals(tokenVar)) {
                 return true;
