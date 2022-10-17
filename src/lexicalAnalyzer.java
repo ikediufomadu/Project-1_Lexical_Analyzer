@@ -16,7 +16,7 @@ public class lexicalAnalyzer {
     private static String currentTokenValue = "";
     private static String currentTokenRead = "";
     private static boolean lexErrorReported = false;
-    //private static
+    private static List<String> words = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -27,8 +27,8 @@ public class lexicalAnalyzer {
             System.exit(0);
         }
         reader(fileName);
+        kindHelper();
     }
-
     //Opens a text file if it exists and reads it
     public static void reader(String filenameToRead) throws IOException {
         File f = new File(filenameToRead);
@@ -78,7 +78,6 @@ public class lexicalAnalyzer {
     //Converts characters passed by reader method to words
     private static void charToWord(char[] charHolder) {
         String newWord = "";
-        //System.out.println(Arrays.toString(charHolder));
         for (int i = 0; i < charHolder.length; i++) {
             for (int j = i + 1; j < charHolder.length; j++){
                 if (charHolder[i] == '/' && charHolder[j] == '/') {
@@ -88,35 +87,22 @@ public class lexicalAnalyzer {
             if (charHolder[i] != ' ') {
                 newWord = newWord + charHolder[i];
                  if (i == charHolder.length - 1) {
-                     //symbolSeparator(newWord);
-                     System.out.print(newWord);
+                     words.add(newWord);
                  }
             }
             else {
-                //symbolSeparator(newWord);
-                System.out.print(newWord);
+                words.add(newWord);
                 newWord = "";
             }
         }
     }
-    private static void symbolSeparator(String s) {
-        List<String> words = new ArrayList<>();
-        words.add(s);
-        System.out.println(Arrays.toString(words.toArray()));
-        if(isKeyword(words.toString())) {
-            //System.out.println(words);
-            //send the word to the KIND method then print it out
-        }
-        else{
-            //System.out.println("NO KEY WORDS");
-        }
-        //System.out.println(words);
-        //Figure out how to separate the symbols from the words
-        //Send the words until you hit a symbol (use the method that determines if the char is a number or letter to pass it and then use an else statement to pass the symbol associated with it)
-        //Send the word to the kind function WITHOUT the symbol
-        //After separating the words and symbols, send the words to the kind function. Make it a global variable and then send it to kind because it will be updated constantly
-    }
+    private static void kindHelper() {
+        for (String s:
+             words) {
 
+        }
+        System.out.println(words);
+    }
     //Get next lexeme
     public static void next() throws IOException {
         try{
