@@ -3,18 +3,44 @@
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 
 
 public class lexicalAnalyzer {
     //Variables
-    private static String currentKind = "";
     private static int currentLine = 0;
     private static int currentCharInLine = 0;
-    private static String currentTokenValue = "";
-    private static String currentTokenRead = "";
+    private static HashMap<Integer, List<String>> wordsMap = new HashMap<>();
     private static final List<String> words = new ArrayList<>();
+    private static final HashMap<String, HashSet<String>> map = new HashMap(){
+        {
+            put("keyword", new HashSet<String>(){{
+                add("program");
+                add(":");
+                add(";");
+                add("bool");
+                add("int");
+            }});
+
+            put("symbol", new HashSet<String>(){{
+                add("<");
+                add("<=");
+                add("=");
+                add("!=");
+                add(">=");
+                add(">");
+                add("+");
+                add("-");
+                add("*");
+                add("/");
+                add(":=");
+            }});
+            put("end", new HashSet<String>(){{
+                add("end-of-file");
+            }});
+        }
+    };
 
     public static void main(String[] args) throws IOException {
         BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
@@ -25,10 +51,20 @@ public class lexicalAnalyzer {
             System.exit(0);
         }
         reader(fileName);
-        for (String s: words) {
-            isKeyword(s);
-            kind();
-            System.out.println(position() + ": " + kind() + " " + value());
+        for (Map.Entry<Integer, List<String>> entry : wordsMap.entrySet()){
+            int lineNum = entry.getKey();
+            int col = 0;
+            List<String> wordList = entry.getValue();
+            for (String word : wordList) {
+                col += word.length();
+                if (!word.equals("")) {
+                    TokenInfo tokenInfo = getTokenInfo(word);
+                    if (tokenInfo != null) {
+                        kind(tokenInfo);
+                        System.out.println(position(lineNum, col) + ": " + kind(tokenInfo) + " " + value(tokenInfo));
+                    }
+                }
+            }
         }
     }
     //Opens a text file if it exists and reads it
@@ -52,10 +88,10 @@ public class lexicalAnalyzer {
                     if (commentChecker(charHolder, checker)) {
                         continue;
                     }
-                    reportLexicalError(c);
+                    reportLexicalError(c, currentLine, currentCharInLine);
                     charHolder[i] = c;
                 }
-                charToWord(charHolder);
+                charToWord(charHolder, currentLine);
                 currentCharInLine = 0;
             }
             br.close();
@@ -79,7 +115,7 @@ public class lexicalAnalyzer {
     }
 
     //Converts characters passed by reader method to words, also creates a new word when it takes in certain symbols
-    private static void charToWord(char[] charHolder) {
+    private static void charToWord(char[] charHolder, int currentLine) {
         StringBuilder newWord = new StringBuilder();
         for (int i = 0; i < charHolder.length; i++) {
             for (int j = i + 1; j < charHolder.length; j++){
@@ -88,100 +124,91 @@ public class lexicalAnalyzer {
                 }
             }
             //Adds these symbols individually to allow access to the char adjacent to it
+            List<String> wordList = wordsMap.getOrDefault(currentLine, new ArrayList<>());
             if (charHolder[i] == ':') {
-                words.add(newWord.toString());
+                wordList.add(newWord.toString());
                 newWord = new StringBuilder();
             }
-            if (charHolder[i] != ' ' && charHolder[i] != ';' && charHolder[i] != '(' && charHolder[i] != ')') {
+            if (charHolder[i] != ' ' && charHolder[i] != ';' && charHolder[i] != '(' && charHolder[i] != ')' && charHolder[i] != '/' && charHolder[i] != '_') {
                 newWord.append(charHolder[i]);
                  if (i == charHolder.length - 1) {
-                     words.add(newWord.toString());
+                     wordList.add(newWord.toString());
                  }
             }
             else {
-                words.add(newWord.toString());
+                wordList.add(newWord.toString());
                 newWord = new StringBuilder();
             }
+            wordsMap.put(currentLine, wordList);
         }
     }
+    //Get position of lexeme
+    public static String position(int currentLine, int currentCharInLine) {return (currentLine) + ":" + (currentCharInLine);}
+    //Get value of lexeme if it is an ID or NUM
+    public static String value(TokenInfo t) {
+        if (t.currentKeyword.equals("'ID'")) {
+            return t.currentTokenValue;
+        }
+        else if (t.currentKeyword.equals("'NUM'")) {
+            return t.currentTokenValue;
+        }
+        return "";
+    }
     //Get kind of lexeme
-    public static String kind() {
-        switch (currentKind) {
-            case "identifiers" -> currentKind = "'ID'";
-            case "integer" -> currentKind = "'NUM'";
+    public static String kind(TokenInfo t) {
+        switch (t.currentKeyword) {
+            case "identifiers" -> t.currentKeyword = "'ID'";
+            case "integer" -> t.currentKeyword = "'NUM'";
             case "keyword", "symbol" -> {
-                return "'" + currentTokenRead + "'";
+                return "'" + t.currentTokenValue + "'";
             }
-            case "end" -> {
-                currentKind = "end-of-text";
+            case "end-of-file" -> {
+                t.currentKeyword = "end-of-text";
                 System.out.println("Reached the end of the file.\n...\nResetting program\n\n");
                 sequenceKeepRunning();
             }
         }
-        return currentKind;
+        return t.currentKeyword;
     }
-    //Get value of lexeme if it is an ID or NUM
-    public static String value() {
-        if (currentKind.equals("'ID'")) {
-            return currentTokenRead;
-        }
-        else if (currentKind.equals("'NUM'")) {
-            return currentTokenRead;
-        }
-        return currentTokenValue;
-    }
-    //Get position of lexeme
-    public static String position() {return (currentLine) + ":" + (currentCharInLine);}
     //Check reserved keywords
-    public static void isKeyword(String tokenVar) {
-        String[][] reservedKeyword = {
-                {"program", ":", ";", "bool", "int"},
-                {"<", "=<", "=", "!=", ">=", ">", "+", "-", "*", "/", ":="},
-                {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"},
-                {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0",}};
+    public static TokenInfo getTokenInfo(String input) {
+        for (Map.Entry<String, HashSet<String>> entry : map.entrySet()) {
+            String tokenVal = entry.getKey();
+            HashSet<String> set = entry.getValue();
 
-        for(int i = 0; i < reservedKeyword.length; i++) {
-            for(int j = 0; j < reservedKeyword[i].length; j++) {
-                String arrayHost;
-                arrayHost = String.valueOf(reservedKeyword[i][j]);
-
-                if (i == 0) {
-                    if (tokenVar.equalsIgnoreCase(arrayHost)) {
-                        currentKind = "keyword";
-                        currentTokenRead = reservedKeyword[i][j];
-                    }
-                }
-                else if (i == 1) {
-                    if (tokenVar.equalsIgnoreCase(arrayHost)) {
-                        currentKind = "symbol";
-                        currentTokenRead = reservedKeyword[i][j];
-                    }
-                }
-                else if (i == 2) {
-                    if (tokenVar.equalsIgnoreCase(arrayHost)) {
-                        currentKind = "identifiers";
-                        currentTokenRead = reservedKeyword[i][j];
-                    }
-                }
-                else {
-                        currentKind = "integer";
-                        currentTokenRead = tokenVar;
-
-                }
+            //Checks if input is in set
+            if (set.contains(input)) {
+                return new TokenInfo(tokenVal, input);
             }
         }
-        if (tokenVar.equalsIgnoreCase("end")) {
-            currentKind = "end";
+
+        // check if integer
+        try {
+            int num = Integer.parseInt(input);
+            return new TokenInfo("integer", input);
+        } catch (Exception e) {
         }
+
+        // check if identifier (character)
+        if (input.length() == 1) {
+            if (Character.isLetter(input.charAt(0))) {
+                return new TokenInfo("identifiers", input);
+            }
+        }
+        if (input.equals("end")) {
+                return new TokenInfo("end-of-file", input);
+        }
+
+        return null;
     }
     //Report syntax errors
-    public static void reportLexicalError(char c) {
+    public static void reportLexicalError(char c, int currentLine, int currentCharInLine) {
         if(c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '\"' || c == '?' || c == '\'' || c == '[' || c == ']') {
-            System.out.println("\nIllegal character at " + position() + ". Character is '" + c + "'.\nExiting program...");
+            System.out.println("\nIllegal character at " + position(currentLine, currentCharInLine) + ". Character is '" + c + "'.\nExiting program...");
             System.exit(0);
         }
     }
-    //Function that keeps program running
+    //Reruns program after successful tokenization of a file
     public static void sequenceKeepRunning() {
         try{
             reset();
@@ -194,10 +221,8 @@ public class lexicalAnalyzer {
     }
     //Reset variables to analyze next file
     private static void reset() {
-        currentKind = "";
         currentLine = 0;
         currentCharInLine = 0;
-        currentTokenValue = "";
-        currentTokenRead = "";
     }
 }
+

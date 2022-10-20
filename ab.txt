@@ -1,8 +1,8 @@
 // This program should print the number 20.
 program Twenty:
-  int a;
+  int \a;
   int b;
-  a := 2;
+  a\ := 2;
   b := 1;
   if not (a < 0) then
     int b;
@@ -14,4 +14,4 @@ program Twenty:
     a := a * (c - b)
   fi;
   print a * (a - b)    // -4 * (-4 - 1)  =  -4 * (-5)  =  20
-end
+    end
