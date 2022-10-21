@@ -70,7 +70,7 @@ public class lexicalAnalyzer {
     //Opens a text file if it exists and reads it
     public static void reader(String filenameToRead) throws IOException {
         File f = new File(filenameToRead);
-        if(f.exists() && !f.isDirectory()) {
+        if(f.exists() && !f.isDirectory() && f.isFile() && f.canRead()) {
             FileReader fr = new FileReader(f);
             BufferedReader br = new BufferedReader(fr);
             String checker;
