@@ -12,7 +12,6 @@ public class lexicalAnalyzer {
     private static int currentLine = 0;
     private static int currentCharInLine = 0;
     private static HashMap<Integer, List<String>> wordsMap = new HashMap<>();
-    private static final List<String> words = new ArrayList<>();
     private static final HashMap<String, HashSet<String>> map = new HashMap(){
         {
             put("keyword", new HashSet<String>(){{
@@ -35,6 +34,7 @@ public class lexicalAnalyzer {
                 add("*");
                 add("/");
                 add(":=");
+                add("-");
             }});
             put("end", new HashSet<String>(){{
                 add("end-of-file");
@@ -177,7 +177,7 @@ public class lexicalAnalyzer {
             HashSet<String> set = entry.getValue();
 
             //Checks if input is in set
-            if (set.contains(input)) {
+            if (set.contains(input.toLowerCase())) {
                 return new TokenInfo(tokenVal, input);
             }
         }
@@ -203,7 +203,7 @@ public class lexicalAnalyzer {
     }
     //Report syntax errors
     public static void reportLexicalError(char c, int currentLine, int currentCharInLine) {
-        if(c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '\"' || c == '?' || c == '\'' || c == '[' || c == ']') {
+        if(c == '@' || c == '!' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '\"' || c == '?' || c == '\'' || c == '[' || c == ']') {
             System.out.println("\nIllegal character at " + position(currentLine, currentCharInLine) + ". Character is '" + c + "'.\nExiting program...");
             System.exit(0);
         }
