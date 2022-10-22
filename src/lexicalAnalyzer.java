@@ -6,23 +6,21 @@ import java.io.*;
 import java.util.*;
 
 
-
 public class lexicalAnalyzer {
     //Variables
     private static int currentLine = 0;
     private static int currentCharInLine = 0;
     private static HashMap<Integer, List<String>> wordsMap = new HashMap<>();
-    private static final HashMap<String, HashSet<String>> map = new HashMap(){
+    private static final HashMap<String, HashSet<String>> map = new HashMap() {
         {
-            put("keyword", new HashSet<String>(){{
+            put("keyword", new HashSet<String>() {{
                 add("program");
                 add(":");
                 add(";");
                 add("bool");
                 add("int");
             }});
-
-            put("symbol", new HashSet<String>(){{
+            put("symbol", new HashSet<String>() {{
                 add("<");
                 add("<=");
                 add("=");
@@ -34,9 +32,10 @@ public class lexicalAnalyzer {
                 add("*");
                 add("/");
                 add(":=");
-                add("-");
+                add("(");
+                add(")");
             }});
-            put("end", new HashSet<String>(){{
+            put("end", new HashSet<String>() {{
                 add("end-of-file");
             }});
         }
@@ -51,13 +50,16 @@ public class lexicalAnalyzer {
             System.exit(0);
         }
         reader(fileName);
-        for (Map.Entry<Integer, List<String>> entry : wordsMap.entrySet()){
+        for (Map.Entry<Integer, List<String>> entry : wordsMap.entrySet()) {
             int lineNum = entry.getKey();
             int col = 0;
             List<String> wordList = entry.getValue();
             for (String word : wordList) {
                 col += word.length();
                 if (!word.equals("")) {
+                    for (int i = 0; i < word.length(); i++) {
+                        reportLexicalError(word.charAt(i), lineNum, col);
+                    }
                     TokenInfo tokenInfo = getTokenInfo(word);
                     if (tokenInfo != null) {
                         System.out.println(position(lineNum, col) + ": " + kind(tokenInfo) + " " + value(tokenInfo));
@@ -66,51 +68,36 @@ public class lexicalAnalyzer {
             }
         }
     }
+
     //Opens a text file if it exists and reads it
     public static void reader(String filenameToRead) throws IOException {
         File f = new File(filenameToRead);
-        if(f.exists() && !f.isDirectory() && f.isFile() && f.canRead()) {
+        if (f.exists() && !f.isDirectory() && f.isFile() && f.canRead()) {
             FileReader fr = new FileReader(f);
             BufferedReader br = new BufferedReader(fr);
             String checker;
-            char[] charHolder;
-
+            StringBuilder sb = new StringBuilder();
             //Reads by line
             while ((checker = br.readLine()) != null) {
                 currentLine++;
-                charHolder = new char[checker.length()];
+                sb = new StringBuilder();
                 for (int i = 0; i < checker.length(); i++) {
                     currentCharInLine++;
                     char c = checker.charAt(i);
 
                     //Skips code with comments
-                    if (commentChecker(charHolder, checker)) {
-                        continue;
-                    }
-                    reportLexicalError(c, currentLine, currentCharInLine);
-                    charHolder[i] = c;
+                    if (i + 1 < checker.length() && c == '/' && checker.charAt(i + 1) == '/') break;
+                    sb.append(c);
                 }
-                charToWord(charHolder, currentLine);
+                charToWord(sb.toString().toCharArray(), currentLine);
                 currentCharInLine = 0;
             }
             br.close();
             fr.close();
-        }
-        else {
+        } else {
             System.out.println("The file name you entered does not exist within this program's directory. Please recheck.\n");
             main(new String[0]);
         }
-    }
-    //Check characters to see if a '/' follows another '/'
-    private static boolean commentChecker(char[] charHolder, String checker) {
-        for (int i = 0; i < checker.length(); i++) {
-            for (int j = i + 1; j < checker.length(); j++) {
-                if (charHolder[i] == '/' && charHolder[j] == '/') {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     //Converts characters passed by reader method to words, also creates a new word when it takes in certain symbols
@@ -118,41 +105,82 @@ public class lexicalAnalyzer {
         StringBuilder newWord = new StringBuilder();
         List<String> wordList = wordsMap.getOrDefault(currentLine, new ArrayList<>());
         for (int i = 0; i < charHolder.length; i++) {
-            if (charHolder[i] == '/' && charHolder[1] == '/') {
-                return;
-            }
-            //Adds these symbols
+            char letter = charHolder[i];
 
-            if (charHolder[i] == ':' || charHolder[i] == ';') {
-                wordList.add(newWord.toString());
+            // When we reach the end
+            if ((letter == ':' || letter == ';') && i == charHolder.length - 1) {
+                if (!newWord.toString().equals("")) wordList.add(newWord.toString());
+                wordList.add(charHolder[i] + "");
+                wordsMap.put(currentLine, wordList);
                 newWord = new StringBuilder();
-            }
-            if (charHolder[i] != ' ' && charHolder[i] != '(' && charHolder[i] != ')' && charHolder[i] != '/' && charHolder[i] != '_') {
-                newWord.append(charHolder[i]);
-                 if (i == charHolder.length - 1) {
-                     wordList.add(newWord.toString());
-                 }
-            }
-            else {
-                wordList.add(newWord.toString());
-                newWord = new StringBuilder();
+                break;
             }
 
+            // Return if we see a comment, ignore the rest
+
+            if (shouldAddWord(letter)) {
+                performAddWord(newWord.toString(), wordList);
+                wordList.add(letter + "");
+                newWord = new StringBuilder();
+            } else {
+                newWord.append(letter);
+            }
+            wordsMap.put(currentLine, wordList);
+        }
+        if (!newWord.isEmpty()) {
+            performAddWord(newWord.toString(), wordList);
             wordsMap.put(currentLine, wordList);
         }
     }
+
+    private static void performAddWord(String newWord, List<String> wordList) {
+        String wordToAdd = newWord;
+        if (wordToAdd.equals("print")) {
+            wordList.add(wordToAdd);
+            return;
+        }
+
+        int index = getKeywordStartingIndex(newWord);
+
+        // Split the string int two parts if a keyword is in there
+        if (index != -1) {
+            String firstWord = wordToAdd.substring(0, index);
+            if (!firstWord.equals("")) wordList.add(firstWord);
+            wordToAdd = wordToAdd.substring(index);
+        }
+
+        if (!wordToAdd.equals("")) wordList.add(wordToAdd);
+    }
+
+    private static boolean shouldAddWord(char letter) {
+        return letter == ' ' || letter == '(' || letter == ')' || letter == '_' || letter == '/';
+    }
+
+    // returns the index of where the word starts
+    private static int getKeywordStartingIndex(String word) {
+        for (String keyword : map.get("keyword")) {
+            if (word.contains(keyword)) {
+                return word.indexOf(keyword);
+            }
+        }
+        return -1;
+    }
+
     //Get position of lexeme
-    public static String position(int currentLine, int currentCharInLine) {return (currentLine) + ":" + (currentCharInLine);}
+    public static String position(int currentLine, int currentCharInLine) {
+        return (currentLine) + ":" + (currentCharInLine);
+    }
+
     //Get value of lexeme if it is an ID or NUM
     public static String value(TokenInfo t) {
         if (t.currentKeyword.equals("'ID'")) {
             return t.currentTokenValue;
-        }
-        else if (t.currentKeyword.equals("'NUM'")) {
+        } else if (t.currentKeyword.equals("'NUM'")) {
             return t.currentTokenValue;
         }
         return "";
     }
+
     //Get kind of lexeme
     public static String kind(TokenInfo t) {
         switch (t.currentKeyword) {
@@ -160,6 +188,9 @@ public class lexicalAnalyzer {
             case "integer" -> t.currentKeyword = "'NUM'";
             case "keyword", "symbol" -> {
                 return "'" + t.currentTokenValue + "'";
+            }
+            case "program_name" -> {
+                return t.currentTokenValue;
             }
             case "end-of-file" -> {
                 t.currentKeyword = "end-of-text";
@@ -169,6 +200,7 @@ public class lexicalAnalyzer {
         }
         return t.currentKeyword;
     }
+
     //Check reserved keywords
     public static TokenInfo getTokenInfo(String input) {
         for (Map.Entry<String, HashSet<String>> entry : map.entrySet()) {
@@ -189,39 +221,44 @@ public class lexicalAnalyzer {
         }
 
         // check if identifier (character)
-        if (input.length() == 1) {
+        if (input.length() == 1 || input.equals("expression")) {
             if (Character.isLetter(input.charAt(0))) {
                 return new TokenInfo("identifiers", input);
             }
         }
         if (input.equals("end")) {
-                return new TokenInfo("end-of-file", input);
+            return new TokenInfo("end-of-file", input);
+        }
+
+        if (input.length() > 1) {
+            return new TokenInfo("program_name", input);
         }
 
         return null;
     }
+
     //Report syntax errors
     public static void reportLexicalError(char c, int currentLine, int currentCharInLine) {
-        if(c == '@' || c == '!' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '\"' || c == '?' || c == '\'' || c == '[' || c == ']') {
+        if (c == '@' || c == '!' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '`' || c == '~' || c == ',' || c == '\"' || c == '?' || c == '\'' || c == '[' || c == ']') {
             System.out.println("\nIllegal character at " + position(currentLine, currentCharInLine) + ". Character is '" + c + "'.\nExiting program...");
             System.exit(0);
         }
     }
+
     //Reruns program after successful tokenization of a file
     public static void sequenceKeepRunning() {
-        try{
+        try {
             reset();
             main(new String[0]);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Could not continue program...quitting program");
             System.exit(0);
         }
     }
+
     //Reset variables to analyze next file
     private static void reset() {
         currentLine = 0;
         currentCharInLine = 0;
     }
 }
-
