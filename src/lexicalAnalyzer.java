@@ -60,7 +60,6 @@ public class lexicalAnalyzer {
                 if (!word.equals("")) {
                     TokenInfo tokenInfo = getTokenInfo(word);
                     if (tokenInfo != null) {
-                        kind(tokenInfo);
                         System.out.println(position(lineNum, col) + ": " + kind(tokenInfo) + " " + value(tokenInfo));
                     }
                 }
@@ -117,19 +116,18 @@ public class lexicalAnalyzer {
     //Converts characters passed by reader method to words, also creates a new word when it takes in certain symbols
     private static void charToWord(char[] charHolder, int currentLine) {
         StringBuilder newWord = new StringBuilder();
+        List<String> wordList = wordsMap.getOrDefault(currentLine, new ArrayList<>());
         for (int i = 0; i < charHolder.length; i++) {
-            for (int j = i + 1; j < charHolder.length; j++){
-                if (charHolder[i] == '/' && charHolder[j] == '/') {
-                    return;
-                }
+            if (charHolder[i] == '/' && charHolder[1] == '/') {
+                return;
             }
-            //Adds these symbols individually to allow access to the char adjacent to it
-            List<String> wordList = wordsMap.getOrDefault(currentLine, new ArrayList<>());
-            if (charHolder[i] == ':') {
+            //Adds these symbols
+
+            if (charHolder[i] == ':' || charHolder[i] == ';') {
                 wordList.add(newWord.toString());
                 newWord = new StringBuilder();
             }
-            if (charHolder[i] != ' ' && charHolder[i] != ';' && charHolder[i] != '(' && charHolder[i] != ')' && charHolder[i] != '/' && charHolder[i] != '_') {
+            if (charHolder[i] != ' ' && charHolder[i] != '(' && charHolder[i] != ')' && charHolder[i] != '/' && charHolder[i] != '_') {
                 newWord.append(charHolder[i]);
                  if (i == charHolder.length - 1) {
                      wordList.add(newWord.toString());
@@ -139,6 +137,7 @@ public class lexicalAnalyzer {
                 wordList.add(newWord.toString());
                 newWord = new StringBuilder();
             }
+
             wordsMap.put(currentLine, wordList);
         }
     }
