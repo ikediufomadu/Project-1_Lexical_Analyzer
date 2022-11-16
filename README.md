@@ -1,5 +1,5 @@
 # NEW LEXICAL ANALYZER CREATED
-## [Click Here] (https://github.com/ikediufomadu/NewLexicalAnalyzer)
+## [[Click Here](https://github.com/ikediufomadu/NewLexicalAnalyzer)]
 # Ikedi Ufomadu
 ## Development Specifications
 ### Java 17
